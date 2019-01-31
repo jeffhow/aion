@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Select a Resource</h2>
+    <h3>{{ location }}</h3>
+    
+    {% if resources %}
+        {% for resource in resources %}
+
+            <a href="{% url 'reserve_resource' resource.id %}" class="app-links">{{ resource.name }}</a>
+
+        {% endfor %}
+    {% else %}
+        <p>There are no resources to reserve at this time.</p>
+        
+        {% if request.user.profile.school_admin %}
+        <p>Use the building administration page to create resources for your building.</p>
+            <a href="{% url 'building_admin' %}" class="app-links">Building administration</a>
+        {% endif %}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+  <h2>Aion Administration</h2>
+  
+  {% if user.is_authenticated %}
+    <p class="errornote">
+        You are authenticated as {{ username }}, but are not authorized to
+        access this page. Would you like to login to a different account?
+    </p>
+  {% endif %}
+  
+  <form action="{{ app_path }}" method="post" novalidate>
+    {% csrf_token %}
+    {{ form|crispy }}
+    <div class="submit-row">
+      <input type="submit" value="Log in" class="btn btn-primary">
+      <a href="{% url 'signin' %}" class="btn btn-secondary">Home</a>
+    </div>
+  </form>
+  
+
+{% endblock %}
+
+{% block js %}
+<script>
+$('.form-group').each(function(){
+  
+  // Get the label text
+  var placeholder = $(this).children('label').clone().children().remove().end().text().trim();
+  
+  // Hide the label
+  $(this).children('label').hide();
+  
+  // Use the label text for the input placeholder
+  $(this).children('div').children('input').attr('placeholder', placeholder);
+  
+});
+</script>
+{% endblock %}

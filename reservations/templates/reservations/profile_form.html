@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<h2>Update Profile</h2>
+<form method="post" class="uniForm">
+    {% csrf_token %}
+    
+    {% crispy user_form %}
+    {% crispy profile_form %}
+    
+</form>
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function(){
+    if($('select').attr("selectedIndex") == 0) {
+      $("option[selected]").html('Select a school in your organization').attr('disabled','');
+    }
+});
+</script>
+{% endblock %}

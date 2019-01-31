@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}{# surpress app-css #}{% endblock %}
+
+{% block content %}
+  <a href="{% url 'index' %}">
+    <img class="brand brand-lg" src="{% static 'aion/aion-logo.svg' %}">
+  </a>
+  <img src="{% static 'aion/clock-bg.svg' %}" alt="clock image" class="clock-bg">
+  <h2>Get Started</h2>
+
+  <nav>
+    <ul>
+      <li><a href="{% url 'signin'%}">Login</a></li>   
+      <li><a href="{% url 'home' %}">Home</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+      <li><a href="{% url 'password_change' %}">Change Password</a></li>
+    </ul>
+  </nav>
+{% endblock %}

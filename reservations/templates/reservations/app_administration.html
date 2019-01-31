@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>App Admin</h3>
+<small>Select a model to edit</small>
+
+<a href="{% url 'app_users' %}" class="app-links" tabindex="1" accesskey="u">
+    Users ({{ users }})
+</a>
+<a href="{% url 'app_schools' %}" class="app-links" tabindex="2" accesskey="s">
+    Schools ({{ schools }})
+</a>
+<a href="#today" class="app-links" tabindex="3" accesskey="r">
+    Resources ({{ resources }})
+</a>
+<a href="#today" class="app-links" tabindex="4" accesskey="b">
+    Blocks ({{ time_blocks }})
+</a>
+
+{% endblock %}

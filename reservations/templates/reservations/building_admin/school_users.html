@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Select a User</h2>
+    <h3>{{ request.user.profile.location }}</h3>
+    <small class="helper-text">
+        Select a user to update admin access. <br>
+        Admins will appear in italics.
+    </small>
+    
+    {% if profiles %}
+        {% for profile in profiles %}
+            <a href="{% url 'edit_school_admin' profile.id %}" class="app-links">
+                {% if profile.school_admin %}<em>{% endif %}
+                
+                {{ profile.user }}
+                {% if profile.user.first_name %}
+                    ({{ profile.user.first_name }} {{ profile.user.last_name }})
+                {% endif %}
+                
+                {% if profile.school_admin %}</em>{% endif %}
+            <span class="no-underline"><i class="far fa-edit"></i></span></a>
+        {% endfor %}
+    {% else %}
+        <p>There are no users to select.</p>
+        
+    {% endif %}
+{% endblock %}

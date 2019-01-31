@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Building Administration</h2>
+<h3>{{ school }}</h3>
+<a href="{% url 'new_resource' %}" class="app-links" tabindex="1">New Resource<span class="no-underline"><i class="fas fa-plus-circle"></i></span></a>
+<a href="{% url 'edit_resources' %}" class="app-links" tabindex="2">Edit Resources<span class="no-underline"><i>({{ number_of_resources }})</i></span></a>
+<a href="{% url 'new_time_block' %}" class="app-links" tabindex="3">New Block<span class="no-underline"><i class="fas fa-plus-circle"></i></span></a>
+<a href="{% url 'edit_time_blocks' %}" class="app-links" tabindex="4">Edit Blocks<span class="no-underline"><i>({{ number_of_time_blocks }})</i></span></a>
+<a href="{% url 'select_school_users' %}" class="app-links" tabindex="5">Edit Admins<span class="no-underline"><i class="fas fa-user-edit"></i></span></a>
+<a href="{# url 'create-announcement' #}" class="app-links" tabindex="6">Create Announcement<span class="no-underline"><i class="fas fa-bullhorn"></i></span></a>
+<a href="{# url 'manage-announcements' #}" class="app-links" tabindex="7">Manage Announcements<span class="no-underline"><i class="far fa-edit"></i></span></a>
+
+{% endblock %}
