@@ -25,7 +25,7 @@ from django.contrib.auth import login
 from django.utils.http import urlsafe_base64_decode
 
 # App Views
-from .models import Profile, TimeBlock, Resource, School, Reservation
+from .models import Profile, TimeBlock, Resource, School, Reservation, Announcement
 from .forms import UserForm, ProfileForm, SignUpForm 
 from .forms import AjaxMakeReservationForm, AjaxCancelReservationForm
 from datetime import date
@@ -34,7 +34,9 @@ from django.shortcuts import get_object_or_404
 # Building Admin Views
 from .forms import NewResourceForm, EditResourceForm, DeleteResourceForm
 from .forms import NewTimeBlockForm, EditTimeBlockForm, DeleteTimeBlockForm
-from .forms import EditSchoolAdminForm
+from .forms import EditSchoolAdminForm, NewAnnouncementForm, AdminNewAnnouncementForm
+from .forms import EditAnnouncementForm, DeleteAnnouncementForm, AdminEditAnnouncementForm
+from .forms import BulkReservationForm
 
 # Ajax
 from django.http import JsonResponse
@@ -283,6 +285,172 @@ def new_time_block(request):
 
 
 @login_required
+def announcements(request):
+    '''View for users to read announcments
+    '''
+    global_announcements = Announcement.objects.filter(
+            expires_on__gte=date.today()
+        ).filter(
+            publish_on__lte=date.today()
+        ).filter(
+            system_wide=True
+        )
+        
+    local_announcements = Announcement.objects.filter(
+            school=request.user.profile.location
+        ).filter(
+            expires_on__gte=date.today()
+        ).filter(
+            publish_on__lte=date.today()
+        ).filter(
+            system_wide=False
+        )
+    
+    context={
+        'global_announcements':global_announcements,
+        'local_announcements':local_announcements,
+    }
+    return render(request, 'reservations/announcements.html', context)
+
+@login_required
+@user_passes_test(is_school_admin)
+def new_announcement(request):
+    '''View for building admins to create announcments
+    '''
+    if request.method=="POST":
+        if request.user.is_superuser:
+            new_announcment_form = AdminNewAnnouncementForm(request.POST)
+            
+            if(new_announcment_form.is_valid()):
+                announcment_school =  new_announcment_form.cleaned_data['school']
+                system_wide =  new_announcment_form.cleaned_data['system_wide']
+        else:
+            new_announcment_form = NewAnnouncementForm(request.POST)
+            
+            if(new_announcment_form.is_valid()):
+                announcment_school = request.user.profile.location
+                system_wide = False
+        
+        if(new_announcment_form.is_valid()):
+            annoucement_title= new_announcment_form.cleaned_data['title']
+            announcment_message = new_announcment_form.cleaned_data['message']
+            announcment_publish_on = new_announcment_form.cleaned_data['publish_on']
+            announcment_expires_on = new_announcment_form.cleaned_data['expires_on']
+            
+            
+            new_announcement = Announcement(
+                title=annoucement_title,
+                message=announcment_message,
+                publish_on=announcment_publish_on,
+                expires_on=announcment_expires_on,
+                school=announcment_school,
+                system_wide=system_wide
+            )
+                
+            new_announcement.save()
+            
+            return redirect('building_admin')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        if request.user.is_superuser:
+            new_announcment_form = AdminNewAnnouncementForm()
+        else:
+            new_announcment_form = NewAnnouncementForm()
+        
+    context = {'new_announcement_form':new_announcment_form,}
+    return render(request, 'reservations/building_admin/new_announcement_form.html', context)
+
+
+@login_required
+@user_passes_test(is_school_admin)
+def edit_announcement(request, announcement_id):
+    '''View to edit an announcement
+    '''
+    context={}
+    user_school = request.user.profile.location 
+    announcement = get_object_or_404(Announcement, pk=announcement_id)
+    
+    if user_school is announcement.school or request.user.is_superuser:
+        # proceed
+        if request.method == 'POST':
+            if request.user.is_superuser:
+                edit_announcement_form = AdminEditAnnouncementForm(request.POST, instance=announcement)
+            else:
+                edit_announcement_form = EditAnnouncementForm(request.POST, instance=announcement)
+        
+            if edit_announcement_form.is_valid():
+                edit_announcement_form.save()
+                return redirect('edit_announcements')
+            else:
+                errors = edit_announcement_form.errors
+                edit_announcement_form = AdminEditAnnouncementForm(instance=announcement)
+                edit_announcement_form._errors=errors
+        else:
+            if request.user.is_superuser:
+                edit_announcement_form = AdminEditAnnouncementForm(instance=announcement)
+            else:
+                edit_announcement_form = EditAnnouncementForm(instance=announcement)
+    else:
+        # Only building admins or superadmins can edit this announcement
+        redirect('building_admin')
+    
+    context = {'edit_announcement_form': edit_announcement_form, 'announcement': announcement,}
+    
+    return render(request, 'reservations/building_admin/edit_announcement.html', context)
+    
+
+@login_required
+@user_passes_test(is_school_admin)
+def delete_announcement(request, announcement_id):
+    '''View to edit an announcement
+    '''
+    user_school = request.user.profile.location 
+    announcement = get_object_or_404(Announcement, pk=announcement_id)
+    
+    if user_school is announcement.school or request.user.is_superuser:
+        # proceed
+        if request.method == 'POST':
+            delete_announcement_form = DeleteAnnouncementForm(request.POST)
+        
+            if delete_announcement_form.is_valid():
+                announcement.delete()
+                return redirect('edit_announcements')
+        else:
+            delete_announcement_form = DeleteAnnouncementForm()
+    else:
+        # Only building admins or superadmins can edit this announcement
+        redirect('building_admin')
+    
+    context = {'delete_announcement_form': delete_announcement_form, 'announcement': announcement,}
+    
+    return render(request, 'reservations/building_admin/delete_announcement.html', context)    
+    
+    
+    
+@login_required
+@user_passes_test(is_school_admin)
+def edit_announcements(request):
+    '''View lists all announcements that user can edit 
+    '''
+    user_school = request.user.profile.location
+    
+    if request.user.is_superuser:
+        global_announcements = Announcement.objects.filter(expires_on__gte=date.today()).filter(system_wide=True)
+        local_announcements = Announcement.objects.filter(expires_on__gte=date.today()).filter(school=user_school).filter(system_wide=False)
+        context = {
+            'global_announcements' : global_announcements, 
+            'local_announcements' : local_announcements
+        }
+    else:
+        local_announcements = Announcement.objects.filter(expires_on__gte=date.today()).filter(school=user_school)
+        context = {'local_announcements' : local_announcements}
+    
+    return render(request, 'reservations/building_admin/edit_announcements.html',context)
+
+
+
+@login_required
 @user_passes_test(is_school_admin)
 def select_school_users(request):
     '''Displays a list of users so building admins
@@ -316,6 +484,11 @@ def edit_school_admin(request, profile_id):
         'profile':profile,
     }
     return render(request, 'reservations/building_admin/edit_school_admin_form.html',context)
+
+
+
+
+
 
 
 def index(request):
@@ -414,10 +587,36 @@ def home(request):
     
     todays_reservations_count = Reservation.objects.filter(client=request.user).filter(date = date.today()).count()
     my_reservations_count = Reservation.objects.filter(client=request.user).filter(date__gte=date.today()).count()
-    context={
-        'todays_reservations': todays_reservations_count,
-        'my_reservations' : my_reservations_count,
-    }
+    
+    my_announcements = Announcement.objects.filter(
+            expires_on__gte=date.today()
+        ).filter(
+            publish_on__lte=date.today()
+        ).filter(
+            system_wide=True
+        ).count()
+        
+    my_announcements += Announcement.objects.filter(
+            school=request.user.profile.location
+        ).filter(
+            expires_on__gte=date.today()
+        ).filter(
+            publish_on__lte=date.today()
+        ).filter(
+            system_wide=False
+        ).count()
+    if my_announcements > 0:
+        context = {
+            'my_announcements':my_announcements,
+            'todays_reservations': todays_reservations_count,
+            'my_reservations' : my_reservations_count,
+        }
+        
+    else:
+        context={
+            'todays_reservations': todays_reservations_count,
+            'my_reservations' : my_reservations_count,
+        }
     return render( request, 'reservations/home.html', context)
 
 
@@ -467,7 +666,6 @@ def my_resources(request):
         'resources':resources,
     }
     return render(request, 'reservations/my_resources.html', context)
-
 
 
 @login_required
@@ -629,21 +827,85 @@ def ajax_get_reservations(request):
     return JsonResponse(data)
     
     
-#########################################################
-
-
-from django.views.generic.list import ListView 
-from django.views.generic import CreateView, UpdateView, DeleteView
-
-class AppUsersListView(ListView):
-    model=Profile
-    paginate_by=15
+import datetime as dt
+@login_required
+@user_passes_test(is_school_admin)
+def bulk_reservation(request):
+    '''Building Admins can create bulk reservations for a resource.
+    Bulk reservations will not override existing reservations by other users. 
+    This view will return a list of 'conflicts' that could not be reserved.
+    '''
+    if request.method == 'POST':
+        bulk_reservation_form=BulkReservationForm(request.POST, user_school=request.user.profile.location)
+        user_school = request.user.profile.location
+        # print(request.POST)
+        if bulk_reservation_form.is_valid():
+            resource_id = bulk_reservation_form.cleaned_data['resource']
+            from_date = bulk_reservation_form.cleaned_data['from_date']
+            to_date = bulk_reservation_form.cleaned_data['to_date']
+            time_block_ids = bulk_reservation_form.cleaned_data['time_blocks']
+            
+            resource = get_object_or_404(Resource, pk=resource_id)
+            
+            if(user_school is not resource.school):
+                redirect('building_admin')
+            
+            '''Create two empty querysets to store the reservations 
+            that succeed or fail
+            '''
+            conflicts=Resource.objects.none()
+            successes=[]
+            
+            # Get the number of consecutive days to reserve a resource
+            days_to_reserve = (to_date - from_date).days + 1
+            
+            # Loop through the time_blocks
+            for time_block_id in time_block_ids:
+                time_block = get_object_or_404(TimeBlock, pk=time_block_id)
+                
+                if(user_school is not time_block.school):
+                    redirect('building_admin')
+                
+                # Loop through the days requested    
+                for d in range(days_to_reserve):
+                    reservation_date = (from_date + dt.timedelta(days = d))
+                    
+                    try: # Make all the reservations where no conflict exists
+                        reservation = Reservation(resource=resource, time_block=time_block, client=request.user, date=reservation_date)
+                        reservation.save()
+                        
+                        # Append success list
+                        successes.append(reservation)
+                        
+                    except: # Report the conflicts back to the context
+                        reservation = Reservation.objects.filter(
+                            resource=resource
+                        ).filter(
+                            time_block=time_block
+                        ).filter(
+                            client=request.user
+                        ).filter(
+                            date=reservation_date
+                        )
+                        
+                        # Merge failure queryset
+                        conflicts = conflicts | reservation
+                        
+            # Create context for report            
+            context={'successes':successes, 'conflicts':conflicts, 'resource':resource}
+            
+            # Return the confirmation page to user
+            return render(request, 'reservations/building_admin/bulk_reservation_confirm.html', context)
+            
+        else:
+            
+            context={'bulk_reservation_form':bulk_reservation_form}
+            return render(request, 'reservations/building_admin/bulk_reservation_form.html', context)
+    else:
+        bulk_reservation_form=BulkReservationForm(user_school=request.user.profile.location)
+        
+    context={'bulk_reservation_form':bulk_reservation_form}
+    return render(request, 'reservations/building_admin/bulk_reservation_form.html', context)
     
-class AppUserUpdateView(UpdateView):
-    model=Profile
-    fields = '__all__'
-
-class AppSchoolsListView(ListView):
-    model=School
-    paginate_by=5
-    
+   
+   

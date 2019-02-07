@@ -221,10 +221,10 @@ a:hover{
     border-color: #2B2B2B;
 }
 
-.btn{
+.btn:not(.btn-addon){
     font-size: 1.2rem;
     width: calc(50% - 10px);
-    border-radius: 0;
+    border-radius: 0 !important;
     padding:12px 10px;
 }
 
@@ -275,4 +275,41 @@ a:hover{
 
 .delete-link{
     margin-left:5px;
+}
+
+.col-form-label{
+    display:block;
+    text-align:left;
+}
+
+#error_1_id_time_blocks{
+    display: block !important;
+}
+.alert-primary, .alert-secondary{
+    color:#E6E8E6;
+    background-color:inherit;
+    border: solid 1px #E6E8E6;
+    border-radius:10px;
+}
+.reservation-confirmation{
+    text-align: left;  
+    border: solid 1px #E6E8E6;
+    border-radius:10px;
+    padding:10px;
+}
+.reservation-confirmation h5{
+    text-transform: uppercase;
+    text-align: center;
+}
+
+th{
+    break-inside:avoid;
+}
+
+@media print
+{    
+    .no-print
+    {
+        display: none !important;
+    }
 }

@@ -10,10 +10,38 @@
     <h2>Hello, {{ request.user.username }}</h2>
 {% endif %}
 
-{% if announcements %}
-    {% for announcement in announcements %}
-        <div class="helper-text">{{ anouncement }}</div>
+{% if global_announcements %}
+    {% for announcement in global_announcements %}
+        <div class="helper-text announcement alert alert-primary alert-dismissible fade show" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+             </button>
+            <h3>{{ announcement.title }}</h3>
+            <small>{{ announcement.publish_on }}</small>
+            <div class="announcement-message">
+                {{ announcement.message }}
+            </div>
+        </div>
     {% endfor %}
+{% endif %}
+
+{% if local_announcements %}
+    {% for announcement in local_announcements %}
+        <div class="helper-text announcement alert alert-secondary alert-dismissible fade show" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h3>{{ announcement.title }}</h3>
+            <small>{{ announcement.publish_on }}</small>
+            <div class="announcement-message">
+                {{ announcement.message }}
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% if my_announcements %}
+    <a href="{% url 'announcements' %}" class="app-links" tabindex="0" accesskey="v">Important announcements<span class="no-underline"><i>({{ my_announcements }})</i></span></a>
 {% endif %}
 
 <a href="{% url 'my_resources' %}" class="app-links" tabindex="1" accesskey="r">Reserve a resource<span class="no-underline"><i class="fas fa-plus-circle"></i></span></a>

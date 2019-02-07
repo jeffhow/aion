@@ -18,7 +18,7 @@ urlpatterns = [
     path('manage-reservations', views.manage_reservations, name='manage_reservations'),
     path('reserve-resource/<resource_id>/', views.reserve_resource, name='reserve_resource'),
     
-    # Building administration
+    # Building Administration
     path('building-admin/', views.building_admin, name='building_admin'),
     # Resources
     path('new-resource/', views.new_resource, name='new_resource'),
@@ -30,9 +30,18 @@ urlpatterns = [
     path('edit-blocks/', views.edit_time_blocks, name='edit_time_blocks'),
     path('edit-block/<time_block_id>/', views.edit_time_block, name='edit_time_block'),
     path('delete-block/<time_block_id>/', views.delete_time_block, name='delete_time_block'),
-    #admins
+    # Make Building Admins
     path('select-school-users/', views.select_school_users, name='select_school_users'),
     path('edit-school-admin/<profile_id>/', views.edit_school_admin, name='edit_school_admin'),
+    # Announcements
+    path('announcements/', views.announcements, name='announcements'),
+    path('new-annoucement/', views.new_announcement, name='new_announcement'),
+    path('edit-announcements/', views.edit_announcements, name='edit_announcements'),
+    path('edit-announcement/<announcement_id>', views.edit_announcement, name='edit_announcement'),
+    path('delete-announcement/<announcement_id>', views.delete_announcement, name='delete_announcement'),
+    # Bulk Reservations
+    path('bulk-reservation/', views.bulk_reservation, name='bulk_reservation'),
+    # path('bulk-reservation/confirmation', views.bulk_reservation_confirm, name='bulk_reservation_confirm'),
     
     # Ajax request URLs
     path('ajax/cancel-reservation/', views.ajax_cancel_reservation, name='ajax_cancel_reservation'),

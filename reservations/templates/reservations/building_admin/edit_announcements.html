@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Edit an Announcement</h2>
+    <h3>{{ request.user.profile.location }}</h3>
+    
+    <a href="{% url 'new_announcement' %}" class="app-links" tabindex="1">New Announcement<span class="no-underline"><i class="fas fa-plus-circle"></i></span></a>
+
+    {% if global_announcements %}
+        <h4>System-Wide Announcements</h4>
+        {% for announcement in global_announcements %}
+                <a href="{% url 'edit_announcement' announcement.id %}" class="app-links">{{ announcement.title }}<span class="no-underline"><i class="far fa-edit"></i></span></a>
+        {% endfor %}
+    {% endif %}
+    {% if local_announcements %}
+        <h4>Building Announcements</h4>
+        {% for announcement in local_announcements %}
+                <a href="{% url 'edit_announcement' announcement.id %}" class="app-links">{{ announcement.title }}<span class="no-underline"><i class="far fa-edit"></i></span></a>
+        {% endfor %}
+    {% else %}
+        <p>There are no resources to edit.</p>
+        
+        <p>Create resources for your building using the link above.</p>
+
+    {% endif %}
+{% endblock %}

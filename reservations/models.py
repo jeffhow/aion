@@ -147,4 +147,22 @@ class Announcement(models.Model):
     message = models.TextField(null=False)
     publish_on = models.DateField()
     expires_on = models.DateField()
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    school = models.ForeignKey(School, on_delete=models.SET_NULL, null=True, blank=True)
+    system_wide = models.BooleanField(default=False)
+    
+    def clean(self):
+        '''Custom Validation Rules
+        '''
+        # if(self.publish_on < date.today()):    
+        #     raise ValidationError({
+        #         'publish_on': "Your announcment date can't be in the past",
+        #     })
+        
+        if(self.expires_on < self.publish_on):    
+            raise ValidationError({
+                'expires_on': "Your announcment can't expire before it  is published",
+            })
+        
+    def __str__(self):
+        return f'{self.title}, {self.publish_on} - {self.expires_on} ({self.school})'
+        

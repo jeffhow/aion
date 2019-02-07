@@ -28,7 +28,6 @@ class DeepFriedForm(LayoutObject):
     def render(self, form, form_style, context, template_pack=TEMPLATE_PACK):
         # layout_object = Layout()
         for field_name, field in form.fields.items():
-            
             if(field_name=='sequence'):
                 '''Add helper text for sequence field in blocks
                 '''
@@ -43,28 +42,41 @@ class DeepFriedForm(LayoutObject):
                         )
                     )
                 )
+            if(isinstance(field, forms.DateField)):
                 
-            if(isinstance(field, forms.BooleanField)):
-                if field_name == 'school_admin':
-                    self.layout_object.append(
-                        Field(
-                            field_name, 
-                            template="reservations/deep_fried/deep_fried_switch_school_admin.html"
-                        )
-                    )
-                else:
+                self.layout_object.append(
+                    Field(
+                        field_name, template="reservations/deep_fried/deep_fried_date.html")
+                )
+                
+            elif(isinstance(field, forms.BooleanField)):
+                if field_name == 'enabled':
                     self.layout_object.append(
                         Field(
                             field_name, 
                             template="reservations/deep_fried/deep_fried_switch_enable.html"
                         )
                     )
-                
+                else:
+                    self.layout_object.append(
+                        Field(
+                            field_name, 
+                            template="reservations/deep_fried/deep_fried_switch.html"
+                        )
+                    )
+            elif(isinstance(field, forms.MultipleChoiceField)):
+                self.layout_object.append(
+                    Field(
+                        field_name, 
+                        template="reservations/deep_fried/deep_fried_multi_switch.html"
+                    )
+                )
             else:
                 self.layout_object.append(
                     Field(
                         field_name,
                         placeholder=field.label, # Set placeholder to label
+                        aria_label=field.label
                     )
                 )
             

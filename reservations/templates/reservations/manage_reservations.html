@@ -29,10 +29,10 @@
             <div class="form-group">
               <label for="datefilter" class="filter-label">Filter by date</label>
               <div class="input-group">
-                <input type="date" class="form-control date-filter" id="datefilter" name="datefilter">
-                <div class="input-group-append">
+                <input type="date" class="form-control date-filter" id="datefilter" name="datefilter" aria-label="Date Filter" aria-describedby="clear-date-filter-button">
+                <div class="input-group-append" id="clear-date-filter-button">
                   <!--<button type="button" class="btn btn-primary" id="applyFilter" data-dismiss="modal" aria-label="Close">Filter</button>-->
-                  <button type="button" class="btn btn-secondary" id="clearDateFilter">Clear</button> 
+                  <button type="button" class="btn btn-secondary btn-addon" id="clearDateFilter">Clear</button> 
                 </div>
               </div><!-- /.input-group -->
             </div><!-- /.form-group -->
