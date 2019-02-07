@@ -26,15 +26,17 @@ Aion requires Python 3.6+, PostgreSQL, and OS-specific dependancy tools.
 14. Wrote all the building admin functionaility
 15. Created custom forms (extended crispy forms)
 16. Created announcement feature for blg admins
+17. Bulk reservation feature!
 
 ### Todo
-2. Complete Index Page
+1. Complete About Page
+2. Complete Contact Page
+3. Complete Index Page
 4. Complete email feature for super admins
-5. Add bulk reservation feature
-6. Research cleanup script for database (inactive users and resources or blocks)
-7. Finish CSS
-8. Research email options
-9. Deploy to Heroku
+5. Research cleanup script for database (inactive users and resources or blocks)
+6. Finish CSS
+7. Research email server options
+8. Deploy to Heroku
 
 ### Changes in v2.0
 1. Model: Resources replaces Rooms FK: school
