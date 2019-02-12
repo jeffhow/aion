@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  <a href="{% url 'index' %}">
+    <img class="brand brand-lg" src="{% static 'aion/aion-logo.svg' %}">
+  </a>
+  <h2>About Aion</h2>
+  <p>
+      Aion is a sheduling app for school resources. Schools often use periods, 
+      or blocks to schedule classes. Aion is designed specifically for schools
+      to make reserving computer labs or chromebook carts efficient 
+      and intuitive.
+  </p>
+  <p>
+      If your school district is a member of Aion, you can 
+      <a href="{% url 'signup' %}">signup</a> and 
+      start using Aion today. Otherwise, use our
+      <a href="{% url 'contact' %}">contact</a> form to request access.
+  </p>
+  
+{% endblock %}

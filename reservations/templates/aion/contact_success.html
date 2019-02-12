@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <a href="{% url 'index' %}">
+    <img class="brand brand-lg" src="{% static 'aion/aion-logo.svg' %}">
+  </a>
+  <h2>Recieved</h2>
+  <div>
+      <p>Thank you for your request. Your message has been recieved.</p>
+
+  </div>
+  
+{% endblock %}

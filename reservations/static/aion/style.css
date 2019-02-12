@@ -65,7 +65,7 @@ body{
 	filter: drop-shadow( 5px 5px 3px rgba(0, 0, 0, 0.8) );
     width:120px;
     position: absolute;
-    bottom: 25px;
+    bottom: 40px;
     left: 0;
     right: 0;
     margin: auto
@@ -82,4 +82,42 @@ h1, h2, h3, h4, h5, h6, p, a, small, button, btn, div, legend{
 
 h3, legend{
     font-size:1.5rem;
+}
+
+p{
+    text-align: left;
+}
+
+#error_1_id_captcha{
+    display: block !important;
+}
+
+#div_id_captcha div{
+    border:solid #E6E8E6 1px;
+    border-radius:10px;
+    padding: 20px;
+}
+
+#div_id_captcha img{
+    margin:auto;
+    display: block;
+    margin-bottom:20px;
+}
+
+.alert-danger ul{
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.text-danger {
+    display:block;
+    position: relative;
+    padding: .75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
 }

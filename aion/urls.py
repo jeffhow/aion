@@ -91,4 +91,7 @@ urlpatterns += [
         auth_views.PasswordChangeDoneView.as_view(),
         name='password_change_done'
     ),
+    # Captcha URLs
+    re_path(r'^captcha/', include('captcha.urls')),
 ]
+

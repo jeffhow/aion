@@ -71,7 +71,7 @@ class TimeBlock(models.Model):
 '''
 class Profile(models.Model):
     user = models.OneToOneField(User, unique=True, null=False, db_index=True, on_delete=models.CASCADE)
-    location = models.ForeignKey(School, on_delete = models.SET_NULL, null=True, blank=True)
+    location = models.ForeignKey(School, on_delete = models.SET_NULL, null=True, blank=True, verbose_name="building")
     organzation = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
 
     school_admin = models.BooleanField(default=False)

@@ -115,7 +115,7 @@ class UserForm(forms.ModelForm):
                 render_buttons = False
             )
         )
-        self.helper.form_show_labels = False # surpress labels
+        # self.helper.form_show_labels = False # surpress labels
         self.helper[0:2].wrap_together(Fieldset, '{{ request.user }}')
         self.helper.form_tag=False
         
@@ -149,11 +149,11 @@ class ProfileForm(forms.ModelForm):
         self.helper.layout.insert(
             0, # Index of layout items.
             HTML(
-                '<small class="helper-text">Choosing a building is required for making reservations.</small>'
+                '<div class="alert alert-block alert-danger">Choosing a building is required for making reservations.</div>'
             ),
         )
         self.helper.form_tag=False
-        self.helper.form_show_labels = False # surpress labels
+        # self.helper.form_show_labels = False # surpress labels
 
 
 class EditSchoolAdminForm(forms.ModelForm):
@@ -517,41 +517,27 @@ class BulkReservationForm(forms.Form):
                 submit_text="Reserve",
             )
         )
-        
-    '''
-    # time_blocks = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple)
-    # resource = forms.ChoiceField(widget=forms.Select)
-    from_date = forms.DateField(required=True)
-    to_date = forms.DateField(required=True)
-        
+
+''' Contact form with Django Simple Captcha
+'''
+from captcha.fields import CaptchaField
+class ContactForm(forms.Form):
+    email_from = forms.CharField(max_length=100, required=True)
+    subject = forms.CharField(max_length=100, required=True)
+    message = forms.CharField(widget=forms.Textarea)
+    captcha = CaptchaField()
+    
     def __init__(self, *args, **kwargs):
-        time_block_choices = kwargs.pop('time_block_choices', [])
-        resource_choices = kwargs.pop('resource_choices', [])
-        
-        super(BulkReservationForm, self).__init__(*args, **kwargs)
-
-        self.fields['time_blocks']=forms.MultipleChoiceField(
-            widget=forms.CheckboxSelectMultiple, 
-            choices=time_block_choices
-        )
-        self.fields['resource']=forms.ChoiceField(
-            widget=forms.Select, 
-            choices=resource_choices
-        )
-        
-        # Move resources to the beginning of the fields (OrderedDict)
-        self.fields.move_to_end('resource', last=False)
-
+        super(ContactForm, self).__init__(*args, **kwargs)
         # Get the crispy helper and layout objects ready
         self.helper = FormHelper(self)
         self.helper.layout = Layout()
         self.helper.layout.append(
             DeepFriedForm(
-                submit_text="Reserve",
+                submit_text="Submit",
             )
         )
-    '''
-    
+
 class AjaxMakeReservationForm(forms.Form):
     resource_id = forms.IntegerField(required=True)
     time_block_id = forms.IntegerField(required=True)

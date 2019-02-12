@@ -2,6 +2,7 @@
 from crispy_forms.layout import LayoutObject, Layout, ButtonHolder, Submit, HTML, Field
 from crispy_forms.utils import TEMPLATE_PACK
 from django import forms
+from captcha.fields import CaptchaField    
 
 class DeepFriedForm(LayoutObject):
     '''Custom crispy layout object. 
@@ -42,6 +43,7 @@ class DeepFriedForm(LayoutObject):
                         )
                     )
                 )
+            
             if(isinstance(field, forms.DateField)):
                 
                 self.layout_object.append(

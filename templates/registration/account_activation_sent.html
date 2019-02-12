@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
+<a href="{% url 'index' %}">
+    <img class="brand brand-lg" src="{% static 'aion/aion-logo.svg' %}">
+</a>
 <h2>Almost there!</h2>
   <p>
     We've emailed you instructions for activating your account.

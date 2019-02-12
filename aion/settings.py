@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'reservations.apps.ReservationsConfig',
     'crispy_forms',
+    'captcha',
 ]
 
 MIDDLEWARE = [
@@ -154,3 +155,6 @@ EMAIL_PORT      = 25
 EMAIL_USE_TLS   = False
 DEFAULT_FROM_EMAIL  = 'webmaster@my-host.com'
 SERVER_EMAIL    = 'root@my-domain.com'
+
+# Captcha settings
+CAPTCHA_IMAGE_SIZE=175,75

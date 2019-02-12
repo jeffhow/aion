@@ -5,6 +5,12 @@
 {% block content %}
 
 <h2>Update Profile</h2>
+{% if messages %}
+    <!-- Error messaging -->
+        {% for message in messages %}
+            <div class="alert alert-block alert-danger">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
 <form method="post" class="uniForm">
     {% csrf_token %}
     

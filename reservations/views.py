@@ -26,7 +26,7 @@ from django.utils.http import urlsafe_base64_decode
 
 # App Views
 from .models import Profile, TimeBlock, Resource, School, Reservation, Announcement
-from .forms import UserForm, ProfileForm, SignUpForm 
+from .forms import UserForm, ProfileForm, SignUpForm, ContactForm
 from .forms import AjaxMakeReservationForm, AjaxCancelReservationForm
 from datetime import date
 from django.shortcuts import get_object_or_404
@@ -494,6 +494,9 @@ def edit_school_admin(request, profile_id):
 def index(request):
     '''Index page for testing
     '''
+    if request.user.is_authenticated:
+        return redirect('home')
+        
     return render( request, 'aion/index.html')
 
 
@@ -585,8 +588,23 @@ def home(request):
     if(request.user.profile.location is None):
         return redirect('update-profile')
     
-    todays_reservations_count = Reservation.objects.filter(client=request.user).filter(date = date.today()).count()
-    my_reservations_count = Reservation.objects.filter(client=request.user).filter(date__gte=date.today()).count()
+    # Today's reservations for user
+    todays_reservations_count = Reservation.objects.filter(
+        client=request.user
+    ).filter(
+        date = date.today()
+    ).filter(
+        resource__enabled=True
+    ).count()
+    
+    # Manage all reservations
+    my_reservations_count = Reservation.objects.filter(
+        client=request.user
+    ).filter(
+        date__gte=date.today()
+    ).filter(
+        resource__enabled=True
+    ).count()
     
     my_announcements = Announcement.objects.filter(
             expires_on__gte=date.today()
@@ -906,6 +924,33 @@ def bulk_reservation(request):
         
     context={'bulk_reservation_form':bulk_reservation_form}
     return render(request, 'reservations/building_admin/bulk_reservation_form.html', context)
-    
    
+    
+def about(request):
+    return render(request, 'aion/about.html')
+   
+from django.core.mail import send_mail, BadHeaderError
+from django.http import HttpResponse    
+def contact(request):
+    
+    if request.method == 'POST':
+        contact_form = ContactForm(request.POST)
+        if contact_form.is_valid():
+            subject = contact_form.cleaned_data['subject']
+            email_from = contact_form.cleaned_data['email_from']
+            message = contact_form.cleaned_data['message']
+            try:
+                send_mail(subject, message, email_from, ['admin@example.com'])
+            except BadHeaderError:
+                return HttpResponse('Invalid header found.')
+            return redirect('contact_success')
+    else:
+        contact_form = ContactForm()
+    
+    context={ 'contact_form': contact_form }
+    return render(request, 'aion/contact.html', context)
+
+def contact_success(request):
+    return render(request, 'aion/contact_success.html')
+    
    
