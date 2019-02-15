@@ -13,8 +13,7 @@ from django.contrib.auth.models import User
 from .models import Profile, Resource, TimeBlock, Announcement, Reservation
 
 from .deep_fried_form import DeepFriedForm
-
-
+from django.conf import settings
 class SignUpForm(UserCreationForm):
     '''Extend the UserCreationForm to create a 
     custom signup form
@@ -30,17 +29,29 @@ class SignUpForm(UserCreationForm):
     def clean_email(self):
         '''Validate teacher email
         '''
-        
+        AION_AUTHORIZED_DOMAINS = getattr(settings, "AION_AUTHORIZED_DOMAINS", None)
         email = self.cleaned_data['email']
-        domain = re.search("@[\w.]+", email) # must be @worcesterschools.net
-        uname = re.search("^student", email) # Must not begin with 'student' (should be None)
+        
         if User.objects.filter(email=email).exists():
-            raise ValidationError("Email already exists")
+            raise ValidationError("A user with that email already exists")
+                
+        if(AION_AUTHORIZED_DOMAINS is not None):
             
-        if(domain.group() == '@worcesterschools.net' and uname is None): 
-            return email
-        # Invalid. Raise exception
-        raise ValidationError("You must register a valid wps teacher email to sign up for this service.")
+            for d in AION_AUTHORIZED_DOMAINS:
+                valid_domain = d.get('domain', None)
+                user_filter = d.get('filter', None)
+                
+                if(valid_domain is not None):
+                    if(re.search("[^@]+\w+$", email).group() != valid_domain):
+                        raise ValidationError(f'You must register a valid {valid_domain} email to sign up for this service.')
+
+                if(user_filter is not None):
+                    if(bool(re.search("^"+user_filter, email))): 
+                        raise ValidationError(f'Your email cannot contain "{user_filter}."')
+        print('here')        
+        # Passed validation
+        return email
+                
 
     def __init__(self, *args, **kwargs):
         '''Extend Crispy Forms helper and layout objects.

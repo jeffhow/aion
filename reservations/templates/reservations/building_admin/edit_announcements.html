@@ -12,6 +12,12 @@
                 <a href="{% url 'edit_announcement' announcement.id %}" class="app-links">{{ announcement.title }}<span class="no-underline"><i class="far fa-edit"></i></span></a>
         {% endfor %}
     {% endif %}
+    {% if org_announcements %}
+        <h4>Organization-Wide Announcements</h4>
+        {% for announcement in org_announcements %}
+                <a href="{% url 'edit_announcement' announcement.id %}" class="app-links">{{ announcement.title }}<span class="no-underline"><i class="far fa-edit"></i></span></a>
+        {% endfor %}
+    {% endif %}
     {% if local_announcements %}
         <h4>Building Announcements</h4>
         {% for announcement in local_announcements %}

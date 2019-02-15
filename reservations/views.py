@@ -295,7 +295,17 @@ def announcements(request):
         ).filter(
             system_wide=True
         )
-        
+    org_announcements = Announcement.objects.filter(
+            expires_on__gte=date.today()
+        ).filter(
+            publish_on__lte=date.today()
+        ).filter(
+            organization_wide=True
+        ).filter(
+            system_wide=False
+        ).filter(
+            organization=request.user.profile.location.organization
+        )
     local_announcements = Announcement.objects.filter(
             school=request.user.profile.location
         ).filter(
@@ -304,10 +314,13 @@ def announcements(request):
             publish_on__lte=date.today()
         ).filter(
             system_wide=False
+        ).filter(
+            organization_wide=False
         )
     
     context={
         'global_announcements':global_announcements,
+        'org_announcements':org_announcements,
         'local_announcements':local_announcements,
     }
     return render(request, 'reservations/announcements.html', context)
@@ -319,31 +332,38 @@ def new_announcement(request):
     '''
     if request.method=="POST":
         if request.user.is_superuser:
-            new_announcment_form = AdminNewAnnouncementForm(request.POST)
+            new_announcement_form = AdminNewAnnouncementForm(request.POST)
             
-            if(new_announcment_form.is_valid()):
-                announcment_school =  new_announcment_form.cleaned_data['school']
-                system_wide =  new_announcment_form.cleaned_data['system_wide']
+            if(new_announcement_form.is_valid()):
+                announcement_school =  new_announcement_form.cleaned_data['school']
+                organization_wide = new_announcement_form.cleaned_data['organization_wide']
+                organization = new_announcement_form.cleaned_data['organization']
+                system_wide =  new_announcement_form.cleaned_data['system_wide']
+                
         else:
-            new_announcment_form = NewAnnouncementForm(request.POST)
+            new_announcement_form = NewAnnouncementForm(request.POST)
             
-            if(new_announcment_form.is_valid()):
-                announcment_school = request.user.profile.location
+            if(new_announcement_form.is_valid()):
+                announcement_school = request.user.profile.location
                 system_wide = False
+                organization_wide = False
+                organization = request.user.profile.location.organization
         
-        if(new_announcment_form.is_valid()):
-            annoucement_title= new_announcment_form.cleaned_data['title']
-            announcment_message = new_announcment_form.cleaned_data['message']
-            announcment_publish_on = new_announcment_form.cleaned_data['publish_on']
-            announcment_expires_on = new_announcment_form.cleaned_data['expires_on']
+        if(new_announcement_form.is_valid()):
+            announcement_title= new_announcement_form.cleaned_data['title']
+            announcement_message = new_announcement_form.cleaned_data['message']
+            announcement_publish_on = new_announcement_form.cleaned_data['publish_on']
+            announcement_expires_on = new_announcement_form.cleaned_data['expires_on']
             
             
             new_announcement = Announcement(
-                title=annoucement_title,
-                message=announcment_message,
-                publish_on=announcment_publish_on,
-                expires_on=announcment_expires_on,
-                school=announcment_school,
+                title=announcement_title,
+                message=announcement_message,
+                publish_on=announcement_publish_on,
+                expires_on=announcement_expires_on,
+                school=announcement_school,
+                organization_wide=organization_wide,
+                organization=organization,
                 system_wide=system_wide
             )
                 
@@ -436,14 +456,45 @@ def edit_announcements(request):
     user_school = request.user.profile.location
     
     if request.user.is_superuser:
-        global_announcements = Announcement.objects.filter(expires_on__gte=date.today()).filter(system_wide=True)
-        local_announcements = Announcement.objects.filter(expires_on__gte=date.today()).filter(school=user_school).filter(system_wide=False)
+        
+        global_announcements = Announcement.objects.filter(
+            expires_on__gte=date.today()
+        ).filter(
+            system_wide=True
+        )
+        
+        org_announcements = Announcement.objects.filter(
+            expires_on__gte=date.today()
+        ).filter(
+            organization_wide=True
+        ).filter(
+            system_wide=False
+        )
+        
+        local_announcements = Announcement.objects.filter(
+            expires_on__gte=date.today()
+        ).filter(
+            school=user_school
+        ).filter(
+            system_wide=False
+        ).filter(
+            organization_wide=False
+        )
+        
         context = {
-            'global_announcements' : global_announcements, 
+            'global_announcements' : global_announcements,
+            'org_announcements' : org_announcements,
             'local_announcements' : local_announcements
         }
+        
     else:
-        local_announcements = Announcement.objects.filter(expires_on__gte=date.today()).filter(school=user_school)
+        
+        local_announcements = Announcement.objects.filter(
+            expires_on__gte=date.today()
+        ).filter(
+            school=user_school
+        )
+        
         context = {'local_announcements' : local_announcements}
     
     return render(request, 'reservations/building_admin/edit_announcements.html',context)
@@ -486,13 +537,11 @@ def edit_school_admin(request, profile_id):
     return render(request, 'reservations/building_admin/edit_school_admin_form.html',context)
 
 
-
-
-
-
+'''Some Basic Views
+'''
 
 def index(request):
-    '''Index page for testing
+    '''Index page for site
     '''
     if request.user.is_authenticated:
         return redirect('home')
@@ -688,7 +737,7 @@ def my_resources(request):
 
 @login_required
 def reserve_resource(request, resource_id):
-    '''Reserve a resource blocks
+    '''Reserve a resource block
     '''
     resource = get_object_or_404(Resource, pk=resource_id)
     auth_school = request.user.profile.location

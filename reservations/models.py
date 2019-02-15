@@ -26,7 +26,7 @@ class Organization(models.Model):
 '''
 class School(models.Model):
     name = models.CharField(max_length = 200, null=False)
-    organzation = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
+    organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -72,7 +72,7 @@ class TimeBlock(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, unique=True, null=False, db_index=True, on_delete=models.CASCADE)
     location = models.ForeignKey(School, on_delete = models.SET_NULL, null=True, blank=True, verbose_name="building")
-    organzation = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
+    # organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
 
     school_admin = models.BooleanField(default=False)
     
@@ -148,6 +148,8 @@ class Announcement(models.Model):
     publish_on = models.DateField()
     expires_on = models.DateField()
     school = models.ForeignKey(School, on_delete=models.SET_NULL, null=True, blank=True)
+    organization_wide = models.BooleanField(default=False)
+    organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, blank=True)
     system_wide = models.BooleanField(default=False)
     
     def clean(self):
