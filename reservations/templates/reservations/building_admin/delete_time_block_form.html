@@ -6,7 +6,7 @@
 
 <h2>Delete Block</h2>
 <h3>{{ request.user.profile.location }}</h3>
-<a href="{% url 'edit_time_block' time_block.id %}" class="app-links">{{ time_block.name }}</a>
+<a href="{% url 'edit_time_block' time_block.id %}" class="app-links">{{ time_block.name }}<span class="no-underline"><i class="far fa-edit"></i></span></a>
 <small class="helper-text helper-text-block">
     Deleting a block removes it and all reservations associated with it.<br>
     This action cannot be undone. 

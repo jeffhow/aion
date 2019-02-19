@@ -24,6 +24,7 @@ class DeepFriedForm(LayoutObject):
         self.cancel_url = kwargs.pop('cancel_url', None)
         self.cancel_text = kwargs.pop('cancel_text', None)
         self.render_delete_buttons = kwargs.pop('render_delete_buttons', False)
+        self.delete_text = kwargs.pop('delete_text', None)
         self.layout_object = Layout()
 
     def render(self, form, form_style, context, template_pack=TEMPLATE_PACK):
@@ -101,13 +102,14 @@ class DeepFriedForm(LayoutObject):
                 )
                 
         if self.render_delete_buttons:
-                self.layout_object.append( 
-                    ButtonHolder(
-                        HTML('''<button type="submit" value="submit" class="btn btn-primary">
-                        <i class="fas fa-exclamation-triangle"></i>&nbsp;DELETE RESOURCE&nbsp;<i class="fas fa-exclamation-triangle"></i>
-                        </button>'''),
-                        css_class = "btn-group d-flex"
-                    )
+            # todo: Fix this button so the text isn't always "RESOURCE"
+            self.layout_object.append( 
+                ButtonHolder(
+                    HTML(f'''<button type="submit" value="submit" class="btn btn-primary">
+                    <i class="fas fa-exclamation-triangle"></i>&nbsp;{self.delete_text}&nbsp;<i class="fas fa-exclamation-triangle"></i>
+                    </button>'''),
+                    css_class = "btn-group d-flex"
                 )
+            )
         
         return self.layout_object.render(form, form_style, context)

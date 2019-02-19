@@ -20,10 +20,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'v+w(2a-rw**_s(0g)%*&9=b!7x@0^*32g(x@b)^2t#%ni)6fz^'
+# SECRET_KEY = 'v+w(2a-rw**_s(0g)%*&9=b!7x@0^*32g(x@b)^2t#%ni)6fz^'
+
+import os
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'v+w(2a-rw**_s(0g)%*&9=b!7x@0^*32g(x@b)^2t#%ni)6fz^') 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+
+DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 ALLOWED_HOSTS = ['aion2-jeff-how.c9users.io']
 
@@ -40,10 +45,12 @@ INSTALLED_APPS = [
     'reservations.apps.ReservationsConfig',
     'crispy_forms',
     'captcha',
+    'django_cron',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # Whitenoise middleware
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -152,6 +159,9 @@ LOGIN_URL = '/signin/'
 LOGIN_REDIRECT_URL = '/home/'
 LOGOUT_REDIRECT_URL ='/signin/'
 
+# Per manage.py check --deploy
+X_FRAME_OPTIONS = 'DENY'
+
 # Crispy Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -167,3 +177,23 @@ SERVER_EMAIL    = 'root@my-domain.com'
 
 # Captcha settings
 CAPTCHA_IMAGE_SIZE=175,75
+
+# Django_Cron settings
+CRON_CLASSES = [
+    "reservations.cron.DatabaseCleanup",
+]
+
+# Heroku: Update database configuration from $DATABASE_URL.
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/2.1/howto/static-files/
+
+# The absolute path to the directory where collectstatic will collect static files for deployment.
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# The URL to use when referring to static files (where they will be served from)
+STATIC_URL = '/static/'
+

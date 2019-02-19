@@ -121,3 +121,7 @@ p{
     background-color: #f8d7da;
     border-color: #f5c6cb;
 }
+
+.text-danger:empty{
+    display:none;
+}

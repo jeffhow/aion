@@ -27,16 +27,7 @@ Aion requires Python 3.6+, PostgreSQL, and OS-specific dependancy tools.
 15. Created custom forms (extended crispy forms)
 16. Created announcement feature for blg admins
 17. Bulk reservation feature!
-
-### Todo
-1. Complete About Page
-2. Complete Contact Page
-3. Complete Index Page
-4. Complete email feature for super admins
-5. Research cleanup script for database (inactive users and resources or blocks)
-6. Finish CSS
-7. Research email server options
-8. Deploy to Heroku
+18. Background tasks added via django_cron
 
 ### Changes in v2.0
 1. Model: Resources replaces Rooms FK: school
@@ -47,6 +38,7 @@ Aion requires Python 3.6+, PostgreSQL, and OS-specific dependancy tools.
 5. School admin level
 6. Super admin level
 7. Bulk reservations
+8. Built-in account management
 
 #### Built as a learning project by [Jeff.how](http://jeff.how)
 [jeff@jeff.how](mailto:jeff.how)

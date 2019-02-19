@@ -232,6 +232,7 @@ class DeleteTimeBlockForm(forms.ModelForm):
             DeepFriedForm(
                 render_buttons=False,
                 render_delete_buttons=True,
+                delete_text='DELETE BLOCK',
             )
         )
         
@@ -277,6 +278,7 @@ class DeleteAnnouncementForm(forms.Form):
             DeepFriedForm(
                 render_buttons=False,
                 render_delete_buttons=True,
+                delete_text='DELETE ANNOUNCEMENT',
             )
         )
         self.helper.form_show_labels = False # surpress labels
@@ -417,6 +419,7 @@ class DeleteResourceForm(forms.ModelForm):
             DeepFriedForm(
                 render_buttons=False,
                 render_delete_buttons=True,
+                delete_text='DELETE RESOURCE',
             )
         )
         

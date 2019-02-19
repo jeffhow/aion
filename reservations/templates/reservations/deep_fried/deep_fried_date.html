@@ -13,7 +13,5 @@
       {% if field.field.required %} required {% endif %}
     >
 </div>
-<div class="field-error text-danger">
-    {{ field.errors|striptags }}
-</div>
+<div class="field-error text-danger">{{ field.errors|striptags }}</div>
     {% include 'bootstrap4/layout/help_text_and_errors.html' %}
