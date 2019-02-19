@@ -109,15 +109,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-''' List of authorized domains for AION
-Only users with valid domain email can signup.
-A filter can also be applied for the purpose of 
-disallowing a user group on the same domain.
-'''
-AION_AUTHORIZED_DOMAINS = [
-    { 'domain':'worcesterschools.net', 'filter':'student'}
-]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/

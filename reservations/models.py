@@ -13,15 +13,26 @@ from django.core.exceptions import ValidationError
 from datetime import date
 
 # Create your models here.
-
-
-class Organization(models.Model):
-    name=models.CharField(max_length=200, null=False, verbose_name="Organization")
     
+class Organization(models.Model):
+    '''Organization allows multiple districts to use Aion
+    '''
+    name=models.CharField(max_length=200, null=False, verbose_name="Organization")
+    domain=models.CharField(max_length=200, null=False, blank=False)
     def __str__(self):
         return self.name
+    
+    
+class EmailFilter(models.Model):
+    '''Email Filters are words or phrases that an organization may dissallow
+    from  account creation. Ex.: 'student' would dissallow 'student.123456@mydomain.org'
+    '''
+    phrase=models.CharField(max_length=100, null=False, blank=False)
+    organization=models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, blank=True)
+    def __str__(self):
+        return f'{self.phrase}, ({self.organization})'
         
-        
+    
 '''Schools Model
 '''
 class School(models.Model):
@@ -30,6 +41,7 @@ class School(models.Model):
 
     def __str__(self):
         return self.name
+
 
 '''Resources Model
 @PreviouslyKnownAs: Room
@@ -72,7 +84,9 @@ class TimeBlock(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, unique=True, null=False, db_index=True, on_delete=models.CASCADE)
     location = models.ForeignKey(School, on_delete = models.SET_NULL, null=True, blank=True, verbose_name="building")
-    # organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
+    
+    # Organization filters school choices
+    organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
 
     school_admin = models.BooleanField(default=False)
     
@@ -90,11 +104,15 @@ class Profile(models.Model):
         
 '''Creates user profile on first login
 '''
+import re
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
-        
+        new_user_domain = re.search("[^@]+\w+$", instance.email).group()
+        new_user_org = Organization.objects.get(domain=new_user_domain)
+        Profile.objects.create(user=instance, organization=new_user_org)
+
+
 '''Save user profile function
 '''
 @receiver(post_save, sender=User)

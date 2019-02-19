@@ -11,9 +11,10 @@ from crispy_forms.layout import Layout, Fieldset, HTML
 
 from django.contrib.auth.models import User
 from .models import Profile, Resource, TimeBlock, Announcement, Reservation
+from .models import Organization, EmailFilter, School
 
 from .deep_fried_form import DeepFriedForm
-from django.conf import settings
+# from django.conf import settings
 class SignUpForm(UserCreationForm):
     '''Extend the UserCreationForm to create a 
     custom signup form
@@ -29,28 +30,27 @@ class SignUpForm(UserCreationForm):
     def clean_email(self):
         '''Validate teacher email
         '''
-        AION_AUTHORIZED_DOMAINS = getattr(settings, "AION_AUTHORIZED_DOMAINS", None)
-        email = self.cleaned_data['email']
+        new_user_email = self.cleaned_data['email']
+        new_user_domain = re.search("[^@]+\w+$", new_user_email).group()
         
-        if User.objects.filter(email=email).exists():
+        if User.objects.filter(email=new_user_email).exists():
+            # Check for existing user-email
             raise ValidationError("A user with that email already exists")
-                
-        if(AION_AUTHORIZED_DOMAINS is not None):
-            
-            for d in AION_AUTHORIZED_DOMAINS:
-                valid_domain = d.get('domain', None)
-                user_filter = d.get('filter', None)
-                
-                if(valid_domain is not None):
-                    if(re.search("[^@]+\w+$", email).group() != valid_domain):
-                        raise ValidationError(f'You must register a valid {valid_domain} email to sign up for this service.')
-
-                if(user_filter is not None):
-                    if(bool(re.search("^"+user_filter, email))): 
-                        raise ValidationError(f'Your email cannot contain "{user_filter}."')
-        print('here')        
-        # Passed validation
-        return email
+        
+        if(not Organization.objects.filter(domain=new_user_domain).exists()):
+            # Check to see if domain is not authorized by the system (domain doesn't exist)
+            raise ValidationError(f'To signup for Aion, your organization must be a member of the Aion community.')
+        
+        # Retrieve the org / filters for the new user
+        # user_org = Organization.objects.filter(domain=new_user_domain)
+        email_filters = EmailFilter.objects.filter(organization__domain=new_user_domain)
+        
+        for f in email_filters:
+            # Check to see if new email contains a dissallowed email filter
+            if(bool(re.search("^"+f.phrase, new_user_email))): 
+                raise ValidationError('Your email is not allowed to access Aion.')
+        
+        return new_user_email    
                 
 
     def __init__(self, *args, **kwargs):
@@ -145,6 +145,7 @@ class ProfileForm(forms.ModelForm):
         
         super(ProfileForm, self).__init__(*args, **kwargs)
         
+        self.fields["location"].queryset=School.objects.filter(organization=kwargs['instance'].organization)
         # Get the crispy helper and layout objects ready
         self.helper = FormHelper(self)
         self.helper.layout = Layout()
