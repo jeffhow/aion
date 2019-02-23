@@ -138,9 +138,9 @@ STATIC_URL = '/static/'
 #     '/var/www/static/',
 # ]
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "staticfiles")
-]
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, "staticfiles")
+# ]
 
 DATE_INPUT_FORMATS=[
     '%m/%d/%Y',                 # '10/25/2006'
