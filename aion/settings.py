@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'captcha',
     'django_cron',
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -128,9 +129,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, "static"),
+#     '/var/www/static/',
+# ]
+
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-    '/var/www/static/',
+    os.path.join(BASE_DIR, "static")
 ]
 
 DATE_INPUT_FORMATS=[
@@ -156,15 +161,14 @@ X_FRAME_OPTIONS = 'DENY'
 # Crispy Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-# Development Email Testing:
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST      = 'aion2-jeff-how.c9users.io'
-EMAIL_HOST_PASSWORD = 'M@sterW3b'
-EMAIL_HOST_USER = 'admin'
-EMAIL_PORT      = 25
-EMAIL_USE_TLS   = False
-DEFAULT_FROM_EMAIL  = 'webmaster@my-host.com'
-SERVER_EMAIL    = 'root@my-domain.com'
+
+# Email Settings using sendgrid
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.sendgrid.net')
+EMAIL_PORT = os.environ.get('EMAIL_PORT', 587)
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'aion_app')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'mys3cr3tp4ssw0rd')
+EMAIL_USE_TLS = True
+
 
 # Captcha settings
 CAPTCHA_IMAGE_SIZE=175,75
@@ -188,3 +192,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # The URL to use when referring to static files (where they will be served from)
 STATIC_URL = '/static/'
 
+# manage.py --deploy report
+SECURE_HSTS_SECONDS=518400 # 6 days
+SECURE_CONTENT_TYPE_NOSNIFF=True
+SECURE_BROWSER_XSS_FILTER=True
+SECURE_SSL_REDIRECT=True
+SESSION_COOKIE_SECURE=True
+CSRF_COOKIE_SECURE=True
+SECURE_HSTS_INCLUDE_SUBDOMAINS=True
+SECURE_HSTS_PRELOAD=True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https') # Heroku requirement

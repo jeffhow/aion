@@ -9,7 +9,8 @@ block-based tool like Aion.
 # Getting Started
 
 ## Installation and requirements
-Aion requires Python 3.6+, PostgreSQL, and OS-specific dependancy tools.
+Aion requires Python 3.6+, PostgreSQL, an email service (ie. SendGrid),
+and OS-specific dependancy tools.
 
 After creating the superuser, use the django shell to manually create a profile
 for the admin account.
