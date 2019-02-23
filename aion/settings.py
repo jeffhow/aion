@@ -177,6 +177,7 @@ EMAIL_HOST_USER = os.environ.get('SENDGRID_USERNAME', 'aion_app')
 EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_PASSWORD', 'mys3cr3tp4ssw0rd')
 EMAIL_USE_TLS = True
 
+DEFAULT_FROM_EMAIL = 'Aion <noreply@aion.run>'
 
 # Captcha settings
 CAPTCHA_IMAGE_SIZE=175,75

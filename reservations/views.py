@@ -977,6 +977,12 @@ def bulk_reservation(request):
     
 def about(request):
     return render(request, 'aion/about.html')
+
+def tos(request):
+    return render(request, 'aion/tos.html')
+    
+def privacy(request):
+    return render(request, 'aion/privacy.html')
    
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse    
@@ -989,7 +995,7 @@ def contact(request):
             email_from = contact_form.cleaned_data['email_from']
             message = contact_form.cleaned_data['message']
             try:
-                send_mail(subject, message, email_from, ['admin@example.com'])
+                send_mail(subject, message, email_from, ['jeff@jeff.how'])
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')
             return redirect('contact_success')
