@@ -113,3 +113,4 @@ class DeepFriedForm(LayoutObject):
             )
         
         return self.layout_object.render(form, form_style, context)
+        
