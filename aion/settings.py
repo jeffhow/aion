@@ -171,10 +171,10 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
 # Email Settings using sendgrid
-EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.sendgrid.net')
-EMAIL_PORT = os.environ.get('EMAIL_PORT', 587)
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'aion_app')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'mys3cr3tp4ssw0rd')
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ.get('SENDGRID_USERNAME', 'aion_app')
+EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_PASSWORD', 'mys3cr3tp4ssw0rd')
 EMAIL_USE_TLS = True
 
 
