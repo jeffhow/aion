@@ -228,6 +228,13 @@ a:hover{
     padding:12px 10px;
 }
 
+.btn-change-password{
+    width:100% !important;
+}
+.btn-secondary{
+    text-decoration: none;
+}
+
 /** Toggle Switch ************************************************************/
 
 .custom-control{
