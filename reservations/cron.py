@@ -11,7 +11,7 @@ class DatabaseCleanup(CronJobBase):
       - TimeBlocks that have been 'deleted' by building admins ( > 30 days old)
     
     To run this once:
-      - python3 manage.py runcons
+      - python3 manage.py runcrons
     
     To schedule a CronTab at 1:01am every day:
       - cron -e 
