@@ -31,6 +31,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'v+w(2a-rw**_s(0g)%*&9=b!7x@0^*
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 ALLOWED_HOSTS = [
+    'aion.run',
     'aion2-jeff-how.c9users.io', 
     'aionapp.herokuapp.com'
     ]
