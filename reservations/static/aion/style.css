@@ -75,7 +75,7 @@ body{
     padding-left:15px;
 }
 
-h1, h2, h3, h4, h5, h6, p, a, small, button, btn, div, legend{
+h1, h2, h3, h4, h5, h6, p, a, small, button, btn, div, legend, li{
     color: #E6E8E6;
     font-family: "Roboto Condensed", sans-serif;
 }
@@ -124,4 +124,8 @@ p{
 
 .text-danger:empty{
     display:none;
+}
+
+ol, ul{
+    text-align: left;
 }
