@@ -561,4 +561,8 @@ class AjaxMakeReservationForm(forms.Form):
 
 class AjaxCancelReservationForm(forms.Form):
     reservation_id = forms.IntegerField(required=True)
+
+class AjaxBookmarkForm(forms.Form):
+    resource_id = forms.IntegerField(required=True)
+    bookmarked = forms.CharField(max_length=5, required=True)
     

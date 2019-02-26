@@ -45,6 +45,7 @@ In the admin site: Create organizations, email filters, and schools.
 7. Super admin level
 8. Bulk reservations
 9. Built-in account management
+10. Bookmark Resources feature added
 
 #### Built as a learning project by [Jeff.how](http://jeff.how)
 [jeff@jeff.how](mailto:jeff.how)

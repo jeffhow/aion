@@ -52,4 +52,6 @@ urlpatterns = [
     path('ajax/cancel-reservation/', views.ajax_cancel_reservation, name='ajax_cancel_reservation'),
     path('ajax/get-reservations/', views.ajax_get_reservations, name='ajax_get_reservations'),
     path('ajax/make-reservation/', views.ajax_make_reservation, name='ajax_make_reservation'),
+    path('ajax/bookmark/', views.ajax_bookmark, name='ajax_bookmark'),
+
 ]

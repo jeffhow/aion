@@ -27,7 +27,7 @@ from django.utils.http import urlsafe_base64_decode
 # App Views
 from .models import Profile, TimeBlock, Resource, School, Reservation, Announcement
 from .forms import UserForm, ProfileForm, SignUpForm, ContactForm
-from .forms import AjaxMakeReservationForm, AjaxCancelReservationForm
+from .forms import AjaxMakeReservationForm, AjaxCancelReservationForm, AjaxBookmarkForm
 from datetime import date
 from django.shortcuts import get_object_or_404
 
@@ -80,7 +80,7 @@ def edit_resources(request):
     to edit
     '''
     user_school = request.user.profile.location
-    resources = Resource.objects.filter(school=user_school).filter(deleted=False)
+    resources = Resource.objects.filter(school=user_school).filter(deleted=False).order_by('name')
     context = {
         'resources':resources,
     }
@@ -727,10 +727,12 @@ def my_resources(request):
     Display list of resources the user has access to.
     '''
     location = request.user.profile.location
-    resources = Resource.objects.filter(school=location).filter(enabled=True)
+    favorites = request.user.profile.favorites.all().order_by('name')
+    resources = Resource.objects.filter(school=location).filter(enabled=True).order_by('name')
     context={
         'location':location,
         'resources':resources,
+        'favorites':favorites,
     }
     return render(request, 'reservations/my_resources.html', context)
 
@@ -744,13 +746,42 @@ def reserve_resource(request, resource_id):
     
     if(auth_school == resource.school and resource.enabled):
         
+        # Check if this is a bookmarked resource
+        bookmarked=request.user.profile.favorites.filter(pk=resource.pk).exists()
+
         context={
             'resource':resource,
+            'bookmarked':bookmarked,
         }
         return render(request, 'reservations/reserve_resource.html', context)
     else:
         return redirect('home')
- 
+        
+        
+@csrf_protect
+@login_required
+@require_POST
+def ajax_bookmark(request): 
+    '''Bookmark a resource
+    '''
+    data={}
+    form = AjaxBookmarkForm(request.POST)
+    if(form.is_valid()):
+        resource_id=form.cleaned_data['resource_id']
+        bookmarked=form.cleaned_data['bookmarked']
+        user=request.user
+        resource = get_object_or_404(Resource, pk=resource_id)
+        if(user.profile.location==resource.school):
+            if(bookmarked=='False'):
+                user.profile.favorites.add(resource)
+                data['bookmarked']='True'
+            else:
+                user.profile.favorites.remove(resource)
+                data['bookmarked']='False'
+        print(bookmarked)
+        return JsonResponse(data)
+    else:
+        return JsonResponse({'error':'invalid'})
 
 @csrf_protect
 @login_required

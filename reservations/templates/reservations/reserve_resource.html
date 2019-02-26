@@ -1,9 +1,29 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block menu %}
+    {% if request.user.is_authenticated  %}
+      <div class="text-right menu-link">
+        <a href="{% url 'my_resources' %}"><span class="no-underline" aria-hidden="true"><i class="fas fa-backward"></i>&nbsp;</span>BACK</a>
+        <a href="#" data-toggle="modal" data-target="#menuModal">MENU<span class="no-underline" aria-hidden="true">&nbsp;<i class="fas fa-bars" ></i></span>
+        </a>
+      </div>
+    {% endif %}
+{% endblock %}
+
 {% block content %}
+    <div class="bookmark-block">
+      <a href="#" title="bookmark this resource" class="no-underline" id="bookmark" data-bookmarked="{{ bookmarked }}">
+        {% if bookmarked %}
+            <i class="fas fa-bookmark" id="bookmark-icon"></i> Bookmark
+        {% else %}
+            <i class="far fa-bookmark" id="bookmark-icon"></i> Bookmark
+        {% endif %}
+      </a>
+    </div>
+    
     <h2 id='resource-name' data-resource-id="{{ resource.id }}">
-        <a href="{% url 'my_resources' %}">{{ resource.name }}</a>
+        {{ resource.name }}
     </h2>
     <h3>Reserve a Block</h3>
     <div class="form-group">
@@ -33,6 +53,33 @@ $('document').ready(function(){
         get_reservations();
     });
     
+    $('#bookmark').click(function(){
+        var resource_id = $('#resource-name').attr('data-resource-id');
+        var bookmarked = $(this).attr('data-bookmarked');
+        $.ajax({
+            type:'POST',
+            url: '/ajax/bookmark/',
+            data: {
+              'resource_id':resource_id,
+              'bookmarked':bookmarked,
+            },
+            dataType: 'json',
+            success: function(data){
+                if(data['bookmarked']=="True"){
+                    console.log('true');
+                    $('#bookmark-icon').removeClass('far').addClass('fas')
+                    $('#bookmark').attr('data-bookmarked', 'True')
+                }else{
+                    console.log('false');
+                    $('#bookmark-icon').removeClass('fas').addClass('far')
+                    $('#bookmark').attr('data-bookmarked', 'False')
+                }
+            },
+            error: function(e){
+                console.log(e.responseText);
+            }
+        });
+    })
 });
     
 function get_reservations(){

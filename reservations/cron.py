@@ -34,7 +34,7 @@ class DatabaseCleanup(CronJobBase):
         
         # Purge inactive users.
         if inactive_users.exists():
-            success['users_removed'] = inactive_users # for the log
+            success['users_removed'] = list(inactive_users) # for the log
             inactive_users.delete()
         else:
             success['users_removed'] ='None'
@@ -48,7 +48,7 @@ class DatabaseCleanup(CronJobBase):
         
         # Purge 'deleted' resources.
         if deleted_resources.exists():
-            success['resources_removed'] = deleted_resources # for the log
+            success['resources_removed'] = list(deleted_resources) # for the log
             deleted_resources.delete()
         else:
             success['resources_removed'] = 'None'
@@ -63,7 +63,7 @@ class DatabaseCleanup(CronJobBase):
         
         # Purge 'deleted' time blocks.
         if deleted_time_blocks.exists():
-            success['time_blocks_removed'] = deleted_time_blocks # for the log
+            success['time_blocks_removed'] = list(deleted_time_blocks) # for the log
             deleted_time_blocks.delete()
         else:
             success['time_blocks_removed'] = 'None'

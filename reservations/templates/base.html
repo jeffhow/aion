@@ -17,8 +17,22 @@
     {% block css %}
       <link rel="stylesheet" type="text/css" href="{% static 'reservations/app-style.css' %}" />
     {% endblock %}
-
+    
+    <!-- SEO tags -->
     <title>Aion {% block title %}{% endblock %}</title>
+    <meta 
+      name="description" 
+      content="Aion is a sheduling app for school resources. Schools often use 
+      periods, or blocks to schedule classes. Aion is designed specifically for 
+      schools to make reserving computer labs or chromebook carts efficient and 
+      intuitive.">
+    <meta name="og:title" property="og:title" content="Aion: A scheduling app for schools">
+    <meta name="og:description" property="og:description" content="Schools often use 
+      periods, or blocks to schedule classes. Aion is designed specifically for 
+      schools to make reserving computer labs or chromebook carts efficient and 
+      intuitive.">
+    <meta property="og:image" content="{% static 'aion/aion-og-image.jpg' %}" />
+    
   </head>
   <body>
     {% block modal %}
