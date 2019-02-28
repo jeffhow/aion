@@ -413,10 +413,9 @@ def edit_announcement(request, announcement_id):
 def delete_announcement(request, announcement_id):
     '''View to edit an announcement
     '''
-    user_school = request.user.profile.location 
+    # user_school = request.user.profile.location 
     announcement = get_object_or_404(Announcement, pk=announcement_id)
-    
-    if user_school is announcement.school or request.user.is_superuser:
+    if request.user.profile.location == announcement.school or request.user.is_superuser:
         # proceed
         if request.method == 'POST':
             delete_announcement_form = DeleteAnnouncementForm(request.POST)
@@ -428,7 +427,7 @@ def delete_announcement(request, announcement_id):
             delete_announcement_form = DeleteAnnouncementForm()
     else:
         # Only building admins or superadmins can edit this announcement
-        redirect('building_admin')
+        return redirect('building_admin')
     
     context = {'delete_announcement_form': delete_announcement_form, 'announcement': announcement,}
     

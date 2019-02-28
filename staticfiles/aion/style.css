@@ -110,6 +110,9 @@ p{
     margin: 0;
 }
 
+.alert-danger li{
+    color: #721c24;
+}
 .text-danger, .invalid-feedback {
     display:block;
     position: relative;
