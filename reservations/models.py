@@ -91,7 +91,7 @@ class Profile(models.Model):
     school_admin = models.BooleanField(default=False)
     
     # Favorite resources
-    favorites = models.ManyToManyField(Resource)
+    favorites = models.ManyToManyField(Resource, blank=True)
     
     # Necessary for user signup
     email_confirmed = models.BooleanField(default=False)

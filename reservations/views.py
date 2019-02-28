@@ -387,33 +387,21 @@ def new_announcement(request):
 def edit_announcement(request, announcement_id):
     '''View to edit an announcement
     '''
-    context={}
-    user_school = request.user.profile.location 
     announcement = get_object_or_404(Announcement, pk=announcement_id)
     
-    if user_school is announcement.school or request.user.is_superuser:
-        # proceed
+    if(request.user.is_superuser):
         if request.method == 'POST':
-            if request.user.is_superuser:
-                edit_announcement_form = AdminEditAnnouncementForm(request.POST, instance=announcement)
-            else:
-                edit_announcement_form = EditAnnouncementForm(request.POST, instance=announcement)
-        
-            if edit_announcement_form.is_valid():
-                edit_announcement_form.save()
-                return redirect('edit_announcements')
-            else:
-                errors = edit_announcement_form.errors
-                edit_announcement_form = AdminEditAnnouncementForm(instance=announcement)
-                edit_announcement_form._errors=errors
+            edit_announcement_form = AdminEditAnnouncementForm(request.POST, instance=announcement)
         else:
-            if request.user.is_superuser:
-                edit_announcement_form = AdminEditAnnouncementForm(instance=announcement)
-            else:
-                edit_announcement_form = EditAnnouncementForm(instance=announcement)
+            edit_announcement_form = AdminEditAnnouncementForm(instance=announcement)
+    elif(announcement.school == request.user.profile.location):
+        if request.method == 'POST':
+            edit_announcement_form = EditAnnouncementForm(request.POST, instance=announcement)
+        else:
+            edit_announcement_form = EditAnnouncementForm(instance=announcement)
     else:
-        # Only building admins or superadmins can edit this announcement
-        redirect('building_admin')
+        # Not superuser or member school
+        return redirect('building_admin')
     
     context = {'edit_announcement_form': edit_announcement_form, 'announcement': announcement,}
     
