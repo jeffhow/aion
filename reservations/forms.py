@@ -145,7 +145,7 @@ class ProfileForm(forms.ModelForm):
         
         super(ProfileForm, self).__init__(*args, **kwargs)
         
-        self.fields["location"].queryset=School.objects.filter(organization=kwargs['instance'].organization)
+        self.fields["location"].queryset=School.objects.filter(organization=kwargs['instance'].organization).order_by('name')
         # Get the crispy helper and layout objects ready
         self.helper = FormHelper(self)
         self.helper.layout = Layout()

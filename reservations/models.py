@@ -40,7 +40,7 @@ class School(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return f'{self.name}'
 
 
 '''Resources Model

@@ -60,7 +60,7 @@ class DatabaseCleanup(CronJobBase):
         ).filter(
             deleted_on__lt=timezone.now()-timezone.timedelta(days=30) # > 30 days old.
         )
-        
+
         # Purge 'deleted' time blocks.
         if deleted_time_blocks.exists():
             success['time_blocks_removed'] = list(deleted_time_blocks) # for the log
