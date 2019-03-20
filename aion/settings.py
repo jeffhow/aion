@@ -115,6 +115,11 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+'''This may change in the future to: PASSWORD_RESET_TIMEOUT accepting seconds, 
+but as of 3/2018 this is an open ticket in Django
+'''
+PASSWORD_RESET_TIMEOUT_DAYS=1
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 

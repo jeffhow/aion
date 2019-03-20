@@ -908,7 +908,14 @@ def ajax_get_reservations(request):
                     data[i]['reserved']='user' 
                 else:
                     # Match was another user
-                    data[i]['reserved']=reservation.client.username 
+                    user = reservation.client
+                    if(len(user.get_full_name())<1):
+                        username = user.username
+                    else:
+                        username = user.get_full_name()
+                    
+                    display_client = f'<a href="mailto:{user.email}?subject=Your reservation of {resource.name} on {reservation.date} ({reservation.time_block.name})">{username}</a>'
+                    data[i]['reserved']=display_client 
     return JsonResponse(data)
     
     

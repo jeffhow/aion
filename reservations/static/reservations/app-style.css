@@ -181,6 +181,13 @@ a:hover{
     min-width:60px;
 }
 
+.reservation-link a{
+    color:#3F403F;
+}
+.reservation-link a:hover{
+    color:#717371;
+}
+
 #loading-div{
     position:absolute;
     margin-left: auto;
