@@ -13,10 +13,12 @@
             <a href="{% url 'edit_school_admin' profile.id %}" class="app-links">
                 {% if profile.school_admin %}<em>{% endif %}
                 
-                {{ profile.user }}
-                {% if profile.user.first_name %}
-                    ({{ profile.user.first_name }} {{ profile.user.last_name }})
+                {% if profile.user.get_full_name|length < 1 %}
+                    {{ profile.user }}
+                {% else %}
+                    {{ profile.user.get_full_name }}
                 {% endif %}
+                
                 
                 {% if profile.school_admin %}</em>{% endif %}
             <span class="no-underline"><i class="far fa-edit"></i></span></a>

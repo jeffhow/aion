@@ -495,7 +495,7 @@ def select_school_users(request):
     can set other users as building admins
     '''
     user_school = request.user.profile.location
-    profiles = Profile.objects.filter(location=user_school).filter(email_confirmed=True)
+    profiles = Profile.objects.filter(location=user_school).filter(email_confirmed=True).order_by('user__last_name')
     context = {'profiles':profiles,}
     return render(request, 'reservations/building_admin/school_users.html',context)
 

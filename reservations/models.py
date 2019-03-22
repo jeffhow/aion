@@ -38,7 +38,9 @@ class EmailFilter(models.Model):
 class School(models.Model):
     name = models.CharField(max_length = 200, null=False)
     organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, blank=True)
-
+    class Meta:
+       ordering = ['name', ]
+       
     def __str__(self):
         return f'{self.name}'
 
@@ -54,6 +56,9 @@ class Resource(models.Model):
     deleted = models.BooleanField(default=False)
     deleted_on = models.DateField(null=True, blank=True)
     
+    class Meta:
+       ordering = ['name',]
+       
     def __str__(self):
         return f"{self.name}, {self.school}"
 
