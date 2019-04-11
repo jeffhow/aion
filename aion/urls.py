@@ -20,6 +20,7 @@ from django.urls import include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('reservations.urls')),
+    path('analytics/', include('analytics.urls')),
 ]
 
 from django.contrib.auth import views as auth_views

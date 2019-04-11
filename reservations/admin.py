@@ -65,3 +65,13 @@ class UserAdmin(ImportExportModelAdmin):
     '''
     resource_class = UserResource
     pass
+
+from analytics.models import LifetimeAionStat, LifetimeSchoolStat
+
+@admin.register(LifetimeAionStat)
+class LifetimeAionStatAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(LifetimeSchoolStat)
+class LifetimeSchoolStatAdmin(admin.ModelAdmin):
+    pass

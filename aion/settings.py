@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'reservations.apps.ReservationsConfig',
+    'analytics',
     'crispy_forms',
     'captcha',
     'django_cron',
