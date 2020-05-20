@@ -13,7 +13,7 @@ django-ranged-response==0.2.0
 django-simple-captcha==0.5.10
 et-xmlfile==1.0.1
 gunicorn==19.9.0
-httplib2==0.11.3
+httplib2==0.18.0
 idna==2.7
 isort==4.3.4
 jdcal==1.4
