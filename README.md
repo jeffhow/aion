@@ -36,7 +36,7 @@ In the admin site: Create organizations, email filters, and schools.
 18. Background tasks added via django_cron
 
 ### Changes in v2.0
-1. Supports multiple orgs
+1. Supports multiple orgs.
 2. Supports multiple schools within an org 
 3. Updated nomenclature for models (Resources, Blocks)
 4. Users select their school within their org
