@@ -49,3 +49,8 @@ In the admin site: Create organizations, email filters, and schools.
 
 #### Built as a learning project by [Jeff.how](http://jeff.how)
 [jeff@jeff.how](mailto:jeff.how)
+
+### Jose
+[JoseMorales7](https://github.com/JoseMorales7/)
+> Programs must be written for people to read, and only incidentally for machines to execute 
+---
